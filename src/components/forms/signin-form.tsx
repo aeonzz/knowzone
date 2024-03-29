@@ -50,7 +50,7 @@ const SigninForm = () => {
           description: signInData.error,
         });
       } else if (signInData?.ok) {
-        router.push("/onboarding");
+        router.push("/home");
       }
     } catch (error) {
       setIsLoading(false);

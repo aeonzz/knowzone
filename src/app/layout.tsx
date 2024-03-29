@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import NavBar from "@/components/shared/nav-bar";
 import { Toaster } from "sonner";
+import SessionProvider from "@/components/shared/session-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("relative",inter.className)}>
-        <NavBar />
-        {children}
-        <Toaster richColors />
-      </body>
+      <SessionProvider>
+        <body className={cn("relative", inter.className)}>
+          <NavBar />
+          {children}
+          <Toaster richColors />
+        </body>
+      </SessionProvider>
     </html>
   );
 }
