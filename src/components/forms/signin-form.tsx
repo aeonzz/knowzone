@@ -50,7 +50,8 @@ const SigninForm = () => {
           description: signInData.error,
         });
       } else if (signInData?.ok) {
-        router.push("/home");
+        router.push("/dashboard");
+        router.refresh()
       }
     } catch (error) {
       setIsLoading(false);
@@ -114,8 +115,7 @@ const SigninForm = () => {
             </Link>
           </div>
           <Button className="mt-3 w-full" type="submit" disabled={isLoading}>
-            {isLoading && <Loader />}
-            {isLoading ? null : <p>Login</p>}
+            Login
           </Button>
         </form>
 

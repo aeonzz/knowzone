@@ -16,11 +16,13 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   email      String   @unique
-  studentId  Int
+  studentId  Int      @unique
+  role       String   @default("User")
   password   String
   firstName  String
   middleName String
   lastName   String
+  deleted    Boolean  @default(false)
   createdAt  DateTime @default(now()) @db.Timestamp(6)
   updatedAt  DateTime @updatedAt @db.Timestamp(6)
 }

@@ -9,7 +9,7 @@ const Logout = () => {
       onClick={() =>
         signOut({
           redirect: true,
-          callbackUrl: `${window.location.origin}sign-in`,
+          callbackUrl: `${window.location.origin}/sign-in`,
         })
       }
       className="text-red-600 hover:!text-red-600 cursor-pointer"

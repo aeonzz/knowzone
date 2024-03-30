@@ -34,7 +34,7 @@ export const navMenu = [
   {
     title: "Search",
     alt: "search",
-    href: "/home",
+    href: "/dashboard",
     icon: search,
   },
   {

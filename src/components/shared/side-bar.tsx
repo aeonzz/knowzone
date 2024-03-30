@@ -7,19 +7,25 @@ import React from "react";
 import { buttonVariants } from "../ui/button";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { CurrentUser } from "../../../types/user";
 
-const SideBar = () => {
+const SideBar = ({ currentUser }: { currentUser: CurrentUser | null }) => {
   const pathname = usePathname();
+  console.log(currentUser)
   return (
-    <div className="h-32 w-40">
+    <div className="h-32 w-56">
       {navMenu.map((item, index) => (
         <Link
           key={index}
           href={item.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            pathname === item.href && "bg-slate-100 before:block before:bg-pink-500 before:absolute before:w-1 before:h-full before:left-0",
-            "mb-1 flex w-full items-center justify-start font-semibold relative py-5",
+            item.title === "Admin" &&
+              currentUser?.role === "User" &&
+              "invisible",
+            pathname === item.href &&
+              "bg-slate-100 before:absolute before:left-0 before:block before:h-full before:w-1 before:bg-pink-500",
+            "relative mb-1 flex w-full items-center justify-start py-5 font-semibold",
           )}
         >
           <Image
