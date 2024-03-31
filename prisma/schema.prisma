@@ -26,3 +26,17 @@ model User {
   createdAt  DateTime @default(now()) @db.Timestamp(6)
   updatedAt  DateTime @updatedAt @db.Timestamp(6)
 }
+
+model Rrl {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  year        Int
+  course      String
+  yearLevel   Int
+  category    String
+  deleted     Boolean  @default(false)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+  url         String
+}

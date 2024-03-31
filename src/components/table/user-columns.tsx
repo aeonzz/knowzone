@@ -22,7 +22,7 @@ export type Userr = {
   password: string;
 };
 
-export const columns: ColumnDef<Userr>[] = [
+export const userColumns: ColumnDef<Userr>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -93,7 +93,7 @@ export const columns: ColumnDef<Userr>[] = [
     header: "Last name",
   },
   {
-    accessorKey: "updateAt",
+    accessorKey: "updatedAt",
     header: "Last update",
     cell: ({ row }) => {
       const newDate = new Date(row.original.updatedAt);

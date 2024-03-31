@@ -1,4 +1,5 @@
 import SearchForm from "@/components/forms/search-form";
+import RrlCard from "@/components/ui/rrl-card";
 import {
   Select,
   SelectContent,
@@ -6,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { rrls } from "@/constants";
 
 const page = () => {
   return (
@@ -56,6 +58,11 @@ const page = () => {
             <SelectItem value="system">System</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="grid h-screen w-full grid-flow-row grid-cols-3 gap-3">
+        {rrls.map((item, index) => (
+          <RrlCard key={index} rrl={item}  />
+        ))}
       </div>
     </section>
   );

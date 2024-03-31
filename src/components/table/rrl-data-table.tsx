@@ -36,8 +36,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import React, { useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { ChevronDown, Plus, UserCog, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -46,18 +44,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// import SignUpForm from "@/components/Forms/Signup"
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import SignUpForm from "@/components/forms/sign-up-form";
+import RrlForm from "../forms/rrl-form";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function RrlDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -81,95 +79,18 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const roleFilter =
-    (table.getColumn("role")?.getFilterValue() as string) ?? "";
-
-  const handleReset = () => {
-    table.getColumn("role")?.setFilterValue("");
-  };
-
   return (
     <Card className="mt-5 p-5">
       <div className="mb-5 flex items-center justify-between">
         <div className="flex w-full items-center space-x-4">
           <Input
-            placeholder="Filter emails..."
+            placeholder="Filter title..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
             }
             className="max-w-xs text-xs"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="text-xs">
-                <UserCog className="mr-1 h-4 w-4" />
-                Roles
-                {roleFilter === "" ? null : (
-                  <>
-                    <Separator className="ml-2 mr-2" orientation="vertical" />
-                    {roleFilter === "" ? null : (
-                      <Badge variant="secondary">{roleFilter}</Badge>
-                    )}
-                  </>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>User roles</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup
-                value={
-                  (table.getColumn("role")?.getFilterValue() as string) ?? ""
-                }
-                onValueChange={(newValue) =>
-                  table.getColumn("role")?.setFilterValue(newValue)
-                }
-              >
-                <DropdownMenuRadioItem value="">All</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="user">User</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="admin">
-                  Admin
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto text-xs">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {roleFilter === "" ? null : (
-            <Button
-              onClick={() => handleReset()}
-              variant="ghost"
-              className="flex items-center"
-            >
-              reset
-              <X className="ml-2 h-4 w-4" />
-            </Button>
-          )}
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -178,17 +99,17 @@ export function DataTable<TData, TValue>({
               Add
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-4xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-semibold">
-                Add user
+                Add rrl
               </DialogTitle>
               <DialogDescription>
-                Please provide the following information to add a new user to
+                Please provide the following information to add a new rrl to
                 the system.
               </DialogDescription>
             </DialogHeader>
-            <SignUpForm setIsOpen={setOpen} />
+            <RrlForm />
           </DialogContent>
         </Dialog>
       </div>

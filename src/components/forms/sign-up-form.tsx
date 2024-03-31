@@ -24,8 +24,17 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Userr } from "@/app/(root)/(main)/admin/columns";
+import { Userr } from "@/components/table/user-columns";
 import { updateUser } from "@/lib/server-actions/user.actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ResetPasswordForm from "./reset-password-form";
 
 const FormSchema = z
   .object({
@@ -259,11 +268,26 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             )}
           />
         </div>
-        {editData ? 
-        <>
-        
-        </>
-        : (
+        {editData ? (
+          <>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="secondary" className="!mt-3">
+                  Reset Password
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[400px]">
+                <DialogHeader>
+                  <DialogTitle>Password reset</DialogTitle>
+                  <DialogDescription>
+                    Please provide a new password
+                  </DialogDescription>
+                </DialogHeader>
+                <ResetPasswordForm />
+              </DialogContent>
+            </Dialog>
+          </>
+        ) : (
           <>
             <FormField
               control={form.control}

@@ -1,29 +1,43 @@
-import React, { FC, useState } from 'react'
-import axios from 'axios'
-import { Userr } from './columns'
-import { useRouter } from 'next/navigation'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Loader2, MoreHorizontal, Pencil, Trash } from 'lucide-react'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import SignUpForm from '@/components/forms/sign-up-form'
-import { deleteUserById } from '@/lib/server-actions/user.actions'
-import { toast } from 'sonner'
+import React, { FC, useState } from "react";
+import axios from "axios";
+import { Userr } from "./user-columns";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import SignUpForm from "@/components/forms/sign-up-form";
+import { deleteUserById } from "@/lib/server-actions/user.actions";
+import { toast } from "sonner";
 
 interface TableActionProps {
-  row: Userr
+  row: Userr;
 }
 
 const TableActions: FC<TableActionProps> = ({ row }) => {
-
-  const userId = row.id
-  const [isLoading, setIsLoading] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [openModalDelete, setOpenModalDelete] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
 
   async function handleDelete(userId: string) {
-    const response = await deleteUserById(userId)
+    const response = await deleteUserById(userId);
 
     if (response.status === 200) {
       setOpenModalDelete(false);
@@ -58,34 +72,45 @@ const TableActions: FC<TableActionProps> = ({ row }) => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-semibold" >Update user</DialogTitle>
+                <DialogTitle className="text-2xl font-semibold">
+                  Update user
+                </DialogTitle>
                 <DialogDescription>
-                  Please provide the following information to update the user in the system.
+                  Please provide the following information to update the user in
+                  the system.
                 </DialogDescription>
               </DialogHeader>
-              <SignUpForm setIsOpen={setOpen} setOpenModal={setOpenModal} editData={row} />
+              <SignUpForm
+                setIsOpen={setOpen}
+                setOpenModal={setOpenModal}
+                editData={row}
+              />
             </DialogContent>
           </Dialog>
           <DropdownMenuSeparator />
           <Dialog open={openModalDelete} onOpenChange={setOpenModalDelete}>
             <DialogTrigger asChild>
-              <DropdownMenuItem className="text-red-600" onSelect={(e: any) => e.preventDefault()}>
+              <DropdownMenuItem
+                className="text-red-600"
+                onSelect={(e: any) => e.preventDefault()}
+              >
                 <Trash className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="text-1xl font-semibold" >Are you absolutely sure?</DialogTitle>
+                <DialogTitle className="text-1xl font-semibold">
+                  Are you absolutely sure?
+                </DialogTitle>
                 <DialogDescription>
-                  This action cannot be undone. This will permanently delete the account and remove your data from our servers.
+                  This action cannot be undone. This will permanently delete the
+                  account and remove your data from our servers.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">
-                    Close
-                  </Button>
+                  <Button variant="outline">Close</Button>
                 </DialogClose>
                 <Button
                   variant="destructive"
@@ -93,7 +118,7 @@ const TableActions: FC<TableActionProps> = ({ row }) => {
                   disabled={isLoading}
                 >
                   {isLoading && (
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Continue
                 </Button>
@@ -103,7 +128,7 @@ const TableActions: FC<TableActionProps> = ({ row }) => {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
-}
+  );
+};
 
-export default TableActions
+export default TableActions;

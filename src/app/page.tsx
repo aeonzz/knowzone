@@ -9,11 +9,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import SideBar from "@/components/shared/side-bar";
 import RrlView from "@/components/ui/rrl-view";
+import NavBar from "@/components/shared/nav-bar";
 
 export default async function Home() {
+  const session = await getServerSession(authOptions);
   return (
-    <main className="relative flex h-auto flex-col items-center">
-      <>
+    <>
+      <NavBar />
+      <main className="relative flex h-auto flex-col items-center">
         <section className="relative flex h-[500px] w-[640px] flex-col items-center justify-center space-y-7">
           <div className="absolute -left-[60%] -top-[50%] -z-50 h-[800px] w-[800px] bg-radial-gradient" />
           <div className="absolute -bottom-[50%] -right-[50%] -z-50 h-[800px] w-[800px] bg-radial-gradient" />
@@ -22,15 +25,15 @@ export default async function Home() {
             <br /> No Fuss, <span className="text-accent">Just Fun!</span>
           </h1>
           <div className="space-x-1">
-            <Button variant="ghost">Request an account</Button>
+            {!session && <Button variant="ghost">Request an account</Button>}
             <Link
-              href="/sign-in"
+              href={session ? "/sign-in" : "/dashboard"}
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "w-[133px]",
+                "w-[160px]",
               )}
             >
-              Get Started
+              {session ? "Got to Dashboard" : "Get Started"}
             </Link>
           </div>
         </section>
@@ -111,8 +114,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      </>
-      {/* <footer className="h-40 w-full bg-secondary"></footer> */}
-    </main>
+        {/* <footer className="h-40 w-full bg-secondary"></footer> */}
+      </main>
+    </>
   );
 }

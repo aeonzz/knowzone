@@ -12,16 +12,26 @@ import { authOptions } from "@/lib/auth";
 import { fetchUserById } from "@/lib/server-actions/user.actions";
 
 const NavBar = async () => {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
   return (
     <header className="w-ful static px-5 py-4">
       <nav className="container flex w-full items-center justify-between">
-        <Link href="/">
-          <Image src={Logo} width={150} height={150} alt="KnowZone" />
-        </Link>
+        <div className="relative w-32 h-14">
+          <Link href="/">
+            <Image src={Logo} fill objectFit="contain" alt="KnowZone" />
+          </Link>
+        </div>
         <div className="space-x-1">
           {session ? (
-            <UserNav userId={session.user.id} />
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+              >
+                Dashboard
+              </Link>
+              <UserNav userId={session.user.id} />
+            </div>
           ) : (
             <Link
               href="/sign-in"

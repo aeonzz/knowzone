@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import NavBar from "@/components/shared/nav-bar";
 import { Toaster } from "sonner";
 import SessionProvider from "@/components/shared/session-provider";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body className={cn("relative", inter.className)}>
-          <NavBar />
-          {children}
-          <Toaster richColors />
-        </body>
+        <EdgeStoreProvider>
+          <body className={cn("relative", inter.className)}>
+            {children}
+            <Toaster richColors />
+          </body>
+        </EdgeStoreProvider>
       </SessionProvider>
     </html>
   );
