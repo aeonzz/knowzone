@@ -14,8 +14,6 @@ import * as z from "zod";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Input } from "../ui/input";
-import { Separator } from "../ui/separator";
-import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "../../../public/KnowZone book.svg";
@@ -30,8 +28,8 @@ const SigninForm = () => {
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "christiancaneos1@gmail.com",
+      password: "123123123",
     },
   });
 
