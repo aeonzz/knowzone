@@ -31,9 +31,9 @@ model Rrl {
   id          String   @id @default(uuid())
   title       String
   description String?
-  year        Int
+  year        DateTime
   course      String
-  yearLevel   Int
+  yearLevel   String
   category    String
   deleted     Boolean  @default(false)
   createdAt   DateTime @default(now()) @db.Timestamp(6)

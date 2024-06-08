@@ -24,7 +24,6 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Userr } from "@/components/table/user-columns";
 import { updateUser } from "@/lib/server-actions/user.actions";
 import {
   Dialog,
@@ -35,6 +34,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ResetPasswordForm from "./reset-password-form";
+import { User } from "@prisma/client";
 
 const FormSchema = z
   .object({
@@ -70,7 +70,7 @@ const FormSchema = z
 interface SignUpFormProps {
   setIsOpen: (state: boolean) => void;
   setOpenModal?: (state: boolean) => void;
-  editData?: Userr | undefined;
+  editData?: User | undefined;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
@@ -80,7 +80,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const studentIdString = editData?.studentId.toString();
+  const [resetPasswordModal, setResetPasswordModal] = useState(false);
   const router = useRouter();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -111,6 +113,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         if (setOpenModal) {
           setOpenModal(false);
         }
+        toast.success("Success", {
+          description: "User successfuly updated",
+        });
       } else {
         setIsLoading(false);
         toast.error("Uh oh! Something went wrong.", {
@@ -170,168 +175,179 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-1">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex items-center justify-between gap-3">
+    <div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-1"
+        >
           <FormField
             control={form.control}
-            name="studentId"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Student id</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="id" type="text" {...field} />
+                  <Input placeholder="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Role</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+          <div className="flex items-center justify-between gap-3">
+            <FormField
+              control={form.control}
+              name="studentId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Student id</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="Select roles"
-                        className="flex-1"
+                    <Input placeholder="id" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Select roles"
+                          className="flex-1"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="firstname" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="middleName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Middle name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="middlename" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="lastname" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {!editData && (
+            <>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                        disabled={isLoading}
                       />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="User">User</SelectItem>
-                    <SelectItem value="Admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First name</FormLabel>
-                <FormControl>
-                  <Input placeholder="firstname" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="middleName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Middle name</FormLabel>
-                <FormControl>
-                  <Input placeholder="middlename" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last name</FormLabel>
-                <FormControl>
-                  <Input placeholder="lastname" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        {editData ? (
-          <>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary" className="!mt-3">
-                  Reset Password
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[400px]">
-                <DialogHeader>
-                  <DialogTitle>Password reset</DialogTitle>
-                  <DialogDescription>
-                    Please provide a new password
-                  </DialogDescription>
-                </DialogHeader>
-                <ResetPasswordForm />
-              </DialogContent>
-            </Dialog>
-          </>
-        ) : (
-          <>
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Re-Enter your password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Re-Enter your password"
+                        type="password"
+                        {...field}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
+          <Button
+            type="submit"
+            className="!mt-3 w-full"
+            disabled={isLoading || resetPasswordModal}
+          >
+            Confirm
+          </Button>
+        </form>
+      </Form>
+      {editData && (
+        <Dialog open={resetPasswordModal} onOpenChange={setResetPasswordModal}>
+          <DialogTrigger asChild>
+            <Button variant="secondary" className="!mt-3">
+              Reset Password
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Password reset</DialogTitle>
+              <DialogDescription>
+                Please provide a new password
+              </DialogDescription>
+            </DialogHeader>
+            <ResetPasswordForm
+              userId={editData.id}
+              setResetPasswordModal={setResetPasswordModal}
             />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Re-Enter your password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Re-Enter your password"
-                      type="password"
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-        <Button type="submit" className="!mt-3 w-full" disabled={isLoading}>
-          Confirm
-        </Button>
-      </form>
-    </Form>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 

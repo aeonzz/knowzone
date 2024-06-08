@@ -16,7 +16,7 @@ async function getUsersData(): Promise<User[]> {
       deleted: false,
     },
     orderBy: {
-      id: "desc",
+      createdAt: "desc",
     },
   });
 

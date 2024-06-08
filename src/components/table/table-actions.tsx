@@ -1,7 +1,4 @@
 import React, { FC, useState } from "react";
-import axios from "axios";
-import { Userr } from "./user-columns";
-import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,9 +22,10 @@ import {
 import SignUpForm from "@/components/forms/sign-up-form";
 import { deleteUserById } from "@/lib/server-actions/user.actions";
 import { toast } from "sonner";
+import { User } from "@prisma/client";
 
 interface TableActionProps {
-  row: Userr;
+  row: User;
 }
 
 const TableActions: FC<TableActionProps> = ({ row }) => {

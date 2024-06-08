@@ -8,19 +8,7 @@ import React, { useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import TableActions from "./table-actions";
-
-export type Rrl = {
-  id: string;
-  title: string;
-  description: string | null;
-  year: number;
-  course: string;
-  yearLevel: number;
-  category: string;
-  deleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import { Rrl } from "@prisma/client";
 
 export const rrlColumns: ColumnDef<Rrl>[] = [
   {
@@ -76,19 +64,13 @@ export const rrlColumns: ColumnDef<Rrl>[] = [
   },
   {
     accessorKey: "year",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="ml-[-15px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Year
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    header: "Year",
+    cell: ({ row }) => {
+      const newDate = new Date(row.original.year);
+      const parsedYear = format(newDate, "PPpp");
+
+      return <div>{parsedYear}</div>;
     },
-    cell: ({ row }) => <div>{row.getValue("year")}</div>,
   },
   {
     accessorKey: "course",

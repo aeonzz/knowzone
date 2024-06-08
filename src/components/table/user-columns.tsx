@@ -3,26 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, User } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import TableActions from "./table-actions";
+import { User } from "@prisma/client";
 
-export type Userr = {
-  id: string;
-  email: string;
-  studentId: number;
-  role: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  createdAt: Date;
-  updatedAt: Date;
-  password: string;
-};
-
-export const userColumns: ColumnDef<Userr>[] = [
+export const userColumns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -100,6 +88,16 @@ export const userColumns: ColumnDef<Userr>[] = [
       const newUpdate = format(newDate, "PPpp");
 
       return <div>{newUpdate}</div>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created",
+    cell: ({ row }) => {
+      const newDate = new Date(row.original.createdAt);
+      const newCreatedAt = format(newDate, "PPpp");
+
+      return <div>{newCreatedAt}</div>;
     },
   },
   {

@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 interface RrrlCardProps {
   rrl: {
@@ -30,7 +31,7 @@ interface RrrlCardProps {
 
 const RrlCard: React.FC<RrrlCardProps> = ({ rrl }) => {
   return (
-    <Card className="relative h-[360px] overflow-hidden">
+    <Link href={"/details"} className="relative h-[360px] overflow-hidden">
       <div className="relative h-36">
         <Image src={rrl1} alt="gg" objectFit="cover" fill />
       </div>
@@ -60,7 +61,7 @@ const RrlCard: React.FC<RrrlCardProps> = ({ rrl }) => {
           Download
         </Button>
       </div>
-    </Card>
+    </Link>
   );
 };
 

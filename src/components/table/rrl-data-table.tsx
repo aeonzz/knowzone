@@ -109,7 +109,7 @@ export function RrlDataTable<TData, TValue>({
                 the system.
               </DialogDescription>
             </DialogHeader>
-            <RrlForm />
+            <RrlForm setOpen={setOpen}/>
           </DialogContent>
         </Dialog>
       </div>

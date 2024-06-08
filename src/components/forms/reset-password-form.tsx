@@ -14,6 +14,9 @@ import { Input } from "../ui/input";
 import * as z from "zod";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { updatePassword } from "@/lib/server-actions/user.actions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const FormSchema = z
   .object({
@@ -28,8 +31,17 @@ const FormSchema = z
     message: "Password do not match",
   });
 
-const ResetPasswordForm = () => {
-  const [isLoading, setIsLoading] = useState();
+interface ResetPasswordFormProps {
+  userId: string;
+  setResetPasswordModal: (state: boolean) => void;
+}
+
+const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
+  userId,
+  setResetPasswordModal,
+}) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -38,9 +50,25 @@ const ResetPasswordForm = () => {
     },
   });
 
-  console.log(form.formState.isDirty);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsLoading(true);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+    const response = await updatePassword(userId, data.password);
+
+    if (response.status === 200) {
+      router.refresh();
+      setResetPasswordModal(false);
+      toast.success("Success", {
+        description: "User successfuly updated",
+      });
+    } else {
+      setIsLoading(false);
+      toast.error("Uh oh! Something went wrong.", {
+        description:
+          "An error occurred while making the request. Please try again later",
+      });
+    }
+  }
 
   return (
     <Form {...form}>

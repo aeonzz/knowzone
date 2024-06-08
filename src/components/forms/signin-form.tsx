@@ -27,10 +27,6 @@ const SigninForm = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
-    defaultValues: {
-      email: "christiancaneos1@gmail.com",
-      password: "123123123",
-    },
   });
 
   const onSubmit = async (values: z.infer<typeof SignInValidation>) => {

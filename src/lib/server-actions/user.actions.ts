@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "../db";
+import { hash } from "bcrypt";
 
 export async function fetchUserById(userId: string) {
   try {
@@ -61,7 +62,7 @@ export async function updateUser({
 
 export async function deleteUserById(userId: string) {
   try {
-     await prisma.user.update({
+    await prisma.user.update({
       where: {
         id: userId,
       },
@@ -74,7 +75,30 @@ export async function deleteUserById(userId: string) {
 
     return { error: null, status: 200 };
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
+    return { error: error.message, status: 500 };
+  }
+}
+
+export async function updatePassword(userId: string, password: string) {
+  console.log(userId)
+  try {
+    const hashedPassword = await hash(password, 10);
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    revalidatePath("/dashboard");
+
+    return { error: null, status: 200 };
+  } catch (error: any) {
+    console.log(error);
     return { error: error.message, status: 500 };
   }
 }

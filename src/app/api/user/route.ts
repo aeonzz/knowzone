@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     if (existingUserById) {
       return NextResponse.json(
-        { user: null, message: "Username already exists" },
+        { user: null, message: "Student Id already exists" },
         { status: 409 },
       );
     }

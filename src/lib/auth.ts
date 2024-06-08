@@ -42,16 +42,11 @@ export const authOptions: NextAuthOptions = {
           return null;
         };
 
-        //? for banned user
-        // if (existingUser.status === "banned") {
-        //   throw new Error("Your account has been banned.");
-        // }
-
-        // const passwordMatched = await compare(credentials.password, existingUser.password);
+        const passwordMatched = await compare(credentials.password, existingUser.password);
         
-        // if (!passwordMatched) {
-        //   throw new Error("Invalid email or password. Please try again.");
-        // };
+        if (!passwordMatched) {
+          throw new Error("Invalid email or password. Please try again.");
+        };
 
         //? for unhashed password
         // if (credentials.password !== existingUser.password) {

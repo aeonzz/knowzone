@@ -27,7 +27,7 @@ export default async function Home() {
           <div className="space-x-1">
             {!session && <Button variant="ghost">Request an account</Button>}
             <Link
-              href={session ? "/sign-in" : "/dashboard"}
+              href={session ? "/dashboard" : "/sign-in"}
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "w-[160px]",
@@ -45,7 +45,7 @@ export default async function Home() {
               </h2>
               <p className="font-semibold text-[#3E3D3D]">
                 Dive into the heart of research without the overwhelm. RRL
-                Finder's streamlined search interface lets you swiftly pinpoint
+                Finder&apos;s streamlined search interface lets you swiftly pinpoint
                 the exact resources you need. Say goodbye to endless browsing
                 and hello to more discoveries, more insights, and more fun in
                 every search.
@@ -82,7 +82,7 @@ export default async function Home() {
                 premier partner in navigating the vast world of research
                 resources. Our platform was born out of a desire to simplify the
                 research process for students, academics, and professionals
-                alike. Situated in Jasaan, Misamis Oriental, we've dedicated
+                alike. Situated in Jasaan, Misamis Oriental, we&apos;ve dedicated
                 ourselves to creating an intuitive, accessible resource that
                 bridges the gap between complex research materials and those who
                 need them the most.
@@ -114,7 +114,9 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        {/* <footer className="h-40 w-full bg-secondary"></footer> */}
+        <footer className="flex h-40 w-full items-center justify-center bg-secondary">
+          <p className="font-semibold text-sm tracking-tight">@KnowZone</p>
+        </footer>
       </main>
     </>
   );

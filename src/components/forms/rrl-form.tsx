@@ -34,6 +34,9 @@ import {
 import { SingleFileDropzone } from "../ui/single-file-dropzone";
 import { useState } from "react";
 import { useEdgeStore } from "@/lib/edgestore";
+import { toast } from "sonner";
+import { createRrl } from "@/lib/server-actions/rrl-actions";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -54,9 +57,14 @@ const FormSchema = z.object({
   }),
 });
 
-const RrlForm = () => {
+interface RrlFormProps {
+  setOpen: (state: boolean) => void;
+}
+
+const RrlForm: React.FC<RrlFormProps> = ({ setOpen }) => {
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -65,12 +73,38 @@ const RrlForm = () => {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(values: z.infer<typeof FormSchema>) {
     setIsLoading(true);
 
     if (file) {
       const res = await edgestore.publicFiles.upload({
         file,
+      });
+
+      const data = {
+        ...values,
+        url: res.url,
+      };
+
+      const response = await createRrl(data);
+
+      if (response.status === 200) {
+        router.refresh();
+        toast.success("Success", {
+          description: "Rrl created successfuly",
+        });
+        setIsLoading(true);
+        setOpen(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Uh oh! Something went wrong.", {
+          description:
+            "An error occurred while making the request. Please try again later",
+        });
+      }
+    } else {
+      toast.warning("Uh oh! Something is missing.", {
+        description: "Image required",
       });
     }
   }
@@ -90,6 +124,7 @@ const RrlForm = () => {
               setFile(file);
             }}
             className="!w-full"
+            disabled={isLoading}
           />
         </div>
         <div>
@@ -100,7 +135,11 @@ const RrlForm = () => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Type the title here" {...field} />
+                  <Input
+                    placeholder="Type the title here"
+                    disabled={isLoading}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,6 +155,7 @@ const RrlForm = () => {
                   <Textarea
                     placeholder="Type your description here."
                     className="min-h-40"
+                    disabled={isLoading}
                     {...field}
                   />
                 </FormControl>
@@ -140,6 +180,7 @@ const RrlForm = () => {
                           "w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
                         )}
+                        disabled={isLoading}
                       >
                         {field.value ? (
                           format(field.value, "PPP")
@@ -155,9 +196,6 @@ const RrlForm = () => {
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -177,7 +215,7 @@ const RrlForm = () => {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger disabled={isLoading}>
                       <SelectValue placeholder="Select a year level" />
                     </SelectTrigger>
                   </FormControl>
@@ -203,7 +241,7 @@ const RrlForm = () => {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger disabled={isLoading}>
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                   </FormControl>
@@ -227,7 +265,7 @@ const RrlForm = () => {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger disabled={isLoading}>
                       <SelectValue placeholder="Select a course" />
                     </SelectTrigger>
                   </FormControl>
@@ -241,7 +279,9 @@ const RrlForm = () => {
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isLoading}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
